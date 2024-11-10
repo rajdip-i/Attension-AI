@@ -38,101 +38,6 @@ class ItineraryGenerationAgent:
         self.geocode_api_key = geocode_api_key
         self.geocode_url = "https://api.opencagedata.com/geocode/v1/json"
     
-    def generate_itinerary(self, preferences):
-        """
-        Generates an initial itinerary based on user preferences.
-        Calls Foursquare API to get points of interest.
-        """
-        city = preferences.get('city')
-        interests = preferences.get('interests', [])
-        budget = preferences.get('budget', 0)
-        
-        if not city:
-            raise ValueError("City is required to generate an itinerary.")
-        
-        # Get the latitude and longitude of the city
-        lat, lon = self.get_city_coordinates(city)
-        if lat is None or lon is None:
-            raise ValueError("Could not find coordinates for the specified city.")
-        
-        # Compile itinerary based on interests
-        itinerary = []
-        for interest in interests:
-            places = self.get_places_by_interest(lat, lon, interest, budget)
-            itinerary.extend(places)
-        
-        # Sort the itinerary by proximity or other factors as needed
-        sorted_itinerary = self.sort_itinerary(itinerary)
-        return sorted_itinerary
-    
-    def get_city_coordinates(self, city):
-        """
-        Gets the coordinates for a city using the OpenCage Geocoding API.
-        """
-        params = {
-            "q": city,
-            "key": self.geocode_api_key,
-            "limit": 1
-        }
-        response = requests.get(self.geocode_url, params=params)
-        
-        if response.status_code != 200:
-            print(f"Error fetching coordinates: {response.status_code}")
-            return None, None
-        
-        data = response.json()
-        if data['results']:
-            location = data['results'][0]['geometry']
-            return location['lat'], location['lng']
-        else:
-            print("No results found for the specified city.")
-            return None, None
-
-    def get_places_by_interest(self, lat, lon, interest, budget):
-        """
-        Calls Foursquare API to get places by interest within budget.
-        """
-        headers = {
-            "Accept": "application/json",
-            "Authorization": self.api_key
-        }
-        
-        params = {
-            "ll": f"{lat},{lon}",
-            "query": interest,
-            "limit": 5,  # Limit the number of results per interest
-            "radius": 5000  # Radius in meters; adjust based on user preferences
-        }
-        
-        response = requests.get(self.base_url, headers=headers, params=params)
-        
-        if response.status_code != 200:
-            print(f"Error fetching data from Foursquare API: {response.status_code}")
-            return []
-        
-        # Parse the response
-        places = response.json().get('results', [])
-        filtered_places = []
-        
-        for place in places:
-            name = place.get('name')
-            address = place.get('location', {}).get('formatted_address', 'Address not available')
-            
-            filtered_places.append({
-                "name": name,
-                "address": address,
-                "category": interest
-            })
-        
-        return filtered_places
-
-    def sort_itinerary(self, itinerary):
-        """
-        Sorts itinerary items based on custom logic, e.g., proximity or type of attraction.
-        This is a placeholder and can be enhanced based on additional requirements.
-        """
-        # Example: Sort by name for simplicity
-        return sorted(itinerary, key=lambda x: x['name'])
 
 
 
@@ -556,15 +461,15 @@ class MemoryAgent:
 app = FastAPI()
 
 # Set up global variables and configurations
-OLLAMA_MODEL_NAME = "lamma3.2"
-OLLAMA_API_URL = "http://localhost:11434/api/generate"
-geocode_api_key = "7629053c3d6348ddb887fddd6317e314"
-weather_api_key = "UZfw8fHJ5lCL7E6aUrIhw0aODXG0H0lH"
-foursquare_api_key = "fsq32rsSypAUXQEcn8OJC/hMGsK4gQVvcSnsf1GVpftgWn4="
-news_api_key = "ba6141e04c5141c8ae4896fe03aa5e50"
-memory_db_uri = "neo4j+s://9691b152.databases.neo4j.io"
-memory_db_user = "neo4j"
-memory_db_password = "397PGgDg2yiCZTT6fDzTLH9F45juY_xJqQw9XsnZrT8"
+OLLAMA_MODEL_NAME = "YOUR API KEY"
+OLLAMA_API_URL = "YOUR API KEY"
+geocode_api_key = "YOUR API KEY"
+weather_api_key = "YOUR API KEY"
+foursquare_api_key = "YOUR API KEY"
+news_api_key = "YOUR API KEY"
+memory_db_uri = "YOUR API KEY"
+memory_db_user = "YOUR API KEY"
+memory_db_password = "YOUR API KEY"
 
 
 # Initialize agents with API keys
