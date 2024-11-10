@@ -63,3 +63,9 @@ Based on Llama 3.2's response, the system executes relevant actions through agen
 Frontend Display:
 The assistant’s response is displayed in the Streamlit app, including preferences, itinerary suggestions, weather information, and an interactive map.
 Maps are generated using Folium and displayed through streamlit_folium for interactivity.
+
+
+
+link to demo video:
+https://drive.google.com/file/d/19XmeXGIZS5MtwGAOtGrWpCJdNMtt8dwu/view?usp=drive_link
+
